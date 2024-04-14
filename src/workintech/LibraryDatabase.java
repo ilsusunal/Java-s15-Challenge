@@ -1,9 +1,48 @@
 package workintech;
 
+import workintech.interfaces.Searchable;
+import workintech.users.Account;
+import workintech.users.Member;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class LibraryDatabase {
-    //can hold many books
-    private List<Book> books;
+public class LibraryDatabase implements Searchable {
+    private Map<Integer, Book> books = new HashMap<>();
+    private Map<Integer, Member> members;
+    private Map<Integer, Author> authors;
 
+    public Map<Integer, Book> getBooks() { return books; }
+    public Map<Integer, Member> getMembers() { return members; }
+    public Map<Integer, Author> getAuthors() { return authors; }
+
+    public void display(){
+        System.out.println("Books in the library:");
+        for (Map.Entry<Integer, Book> entry : books.entrySet()) {
+            int id = entry.getKey();
+            Book book = entry.getValue();
+            System.out.println("Id: " + id + ", Title: " + book.getTitle() + ", Author: " + book.getAuthor());
+        }
+    }
+
+    @Override
+    public void searchByAuthor() {
+
+    }
+
+    @Override
+    public void searchByTitle(Map<Integer, Book> books) {
+        this.books = books;
+
+    }
+
+    @Override
+    public String toString() {
+        return "LibraryDatabase{" +
+                "books=" + books +
+                ", accounts=" + members +
+                ", authors=" + authors +
+                '}';
+    }
 }

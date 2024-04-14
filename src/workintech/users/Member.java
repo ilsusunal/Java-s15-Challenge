@@ -4,7 +4,7 @@ import workintech.enums.Faculty;
 
 import java.util.Objects;
 
-public class Member {
+public abstract class Member {
     private int id;
     private String firstName;
     private String lastName;
