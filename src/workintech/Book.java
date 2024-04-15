@@ -1,6 +1,7 @@
 package workintech;
 
 import workintech.enums.Status;
+import workintech.users.Member;
 
 import java.util.Objects;
 
@@ -27,34 +28,24 @@ public class Book {
     public String getTitle() {
         return title;
     }
-    public double getPrice() {
-        return price;
-    }
+    public double getPrice() { return price; }
     public Status getStatus() {
         return status;
     }
     public int getId() { return id; }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public void setStatus(Status status) {
         this.status = status;
     }
 
     //methods
-    public void display(){
-        System.out.println(String.format("You are looking for %s", getTitle()) + "");
+    public void showOwner(){
+
+    }
+    public void changeOwner(){
+
+    }
+    public void showDueDate(){
+
     }
 
     @Override

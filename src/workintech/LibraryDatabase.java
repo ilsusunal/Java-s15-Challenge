@@ -1,21 +1,22 @@
 package workintech;
 
 import workintech.interfaces.Searchable;
-import workintech.users.Account;
 import workintech.users.Member;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class LibraryDatabase implements Searchable {
     private Map<Integer, Book> books = new HashMap<>();
-    private Map<Integer, Member> members;
-    private Map<Integer, Author> authors;
+    private Map<Integer, Member> members = new HashMap<>();;
+    private Map<Integer, Author> authors = new HashMap<>();;
 
     public Map<Integer, Book> getBooks() { return books; }
     public Map<Integer, Member> getMembers() { return members; }
     public Map<Integer, Author> getAuthors() { return authors; }
+
+    public Book getBookById(int bookId) { return books.get(bookId); }
+    public Member getMemberById(int memberId) { return members.get(memberId);}
 
     public void display(){
         System.out.println("Books in the library:");

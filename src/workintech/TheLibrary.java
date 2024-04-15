@@ -14,7 +14,6 @@ import java.util.Scanner;
 public class TheLibrary {
     private Librarian librarian;
     private LibraryDatabase database;
-    private Message message;
 
     public TheLibrary() {
         this.librarian = new Librarian(1, "The Librarian");
@@ -22,10 +21,6 @@ public class TheLibrary {
         System.out.println(Message.WELCOME.getMessage());
         initializeBooks();
         initializeMembers();
-    }
-
-    public Librarian getLibrarian() {
-        return librarian;
     }
 
     private void initializeMembers() {
@@ -59,28 +54,52 @@ public class TheLibrary {
         System.out.println(Message.TRANSACTION.getMessage());
         Scanner scanner = new Scanner(System.in);
         int userChoice = scanner.nextInt();
-
         switch (userChoice) {
             case 1:
+                // See books
                 database.display();
                 break;
             case 2:
-                //
+                // Search book by title
+                //librarian.searchByTitle(Map<Integer, Book> books);
                 break;
             case 3:
-                //
+                // Search author by name
+                //librarian.searchByAuthor();
                 break;
             case 4:
-                //
+                // Borrow book(s)
+                issueBook();
                 break;
             case 5:
-                //
+                // Return book(s)
                 break;
-
             default:
                 System.out.println("Invalid choice, try again.");
                 break;
         }
 
+    }
+
+    private void issueBook() {
+        System.out.println("Enter the ID of the book you want to borrow:");
+        Scanner scanner = new Scanner(System.in);
+        int bookId = scanner.nextInt();
+        System.out.println("Enter your member ID:");
+        int memberId = scanner.nextInt();
+
+        Book book = database.getBookById(bookId);
+        Member member = database.getMemberById(memberId);
+
+        if (book != null && member != null) {
+            boolean issued = librarian.issueBook(book, member, database);
+            if (issued) {
+                System.out.println("Book issued successfully.");
+            } else {
+                System.out.println("Failed to issue book.");
+            }
+        } else {
+            System.out.println("Book or member not found.");
+        }
     }
 }
