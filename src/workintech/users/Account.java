@@ -1,14 +1,17 @@
 package workintech.users;
 
+import workintech.Transaction;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class Account {
-    private List borrowedBooks; //I used List to protect the order.
+    private List<Transaction> borrowedBooks = new LinkedList<>();; //I used List to protect the order.
     private int maxBookLimit;
     private double debt;
 
     //getter and setters
-    public List getBorrowedBooks() {
+    public List<Transaction> getBorrowedBooks() {
         return borrowedBooks;
     }
     public int getMaxBookLimit() {
@@ -20,8 +23,6 @@ public class Account {
     public void setDebt(double debt) {
         this.debt = debt;
     }
-    public void setBorrowedBooks(List borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
-    }
+
 
 }

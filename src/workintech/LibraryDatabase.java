@@ -6,7 +6,7 @@ import workintech.users.Member;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LibraryDatabase implements Searchable {
+public class LibraryDatabase {
     private Map<Integer, Book> books = new HashMap<>();
     private Map<Integer, Member> members = new HashMap<>();;
     private Map<Integer, Author> authors = new HashMap<>();;
@@ -27,16 +27,7 @@ public class LibraryDatabase implements Searchable {
         }
     }
 
-    @Override
-    public void searchByAuthor() {
 
-    }
-
-    @Override
-    public void searchByTitle(Map<Integer, Book> books) {
-        this.books = books;
-
-    }
 
     @Override
     public String toString() {

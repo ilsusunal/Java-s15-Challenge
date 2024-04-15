@@ -1,14 +1,12 @@
 package workintech;
 
-import workintech.enums.Degree;
-import workintech.enums.Faculty;
-import workintech.enums.Message;
-import workintech.enums.Status;
+import workintech.enums.*;
 import workintech.users.Account;
+import workintech.users.Instructor;
 import workintech.users.Member;
 import workintech.users.Student;
 
-import java.util.Map;
+
 import java.util.Scanner;
 
 public class TheLibrary {
@@ -25,7 +23,13 @@ public class TheLibrary {
 
     private void initializeMembers() {
         Member member1 = new Student(101, "İlsu", "Sunal", new Account(), Faculty.ARCHITECTURE, 1, Degree.MASTER);
+        Member member2 = new Student(102, "Selin", "Öztürk", new Account(), Faculty.LAW, 4, Degree.BACHELOR);
+        Member member3 = new Student(103, "Mehmet", "Sunal", new Account(), Faculty.SCIENCE, 1, Degree.PHD);
+        Member member4 = new Instructor(201, "Doğancan", "Kınık", new Account(), Faculty.ENGINEERING, Role.PROFFESOR);
         librarian.addMember(member1, database);
+        librarian.addMember(member2, database);
+        librarian.addMember(member3, database);
+        librarian.addMember(member4, database);
     }
 
     public void initializeBooks() {
@@ -61,11 +65,11 @@ public class TheLibrary {
                 break;
             case 2:
                 // Search book by title
-                //librarian.searchByTitle(Map<Integer, Book> books);
+                searchByTitle();
                 break;
             case 3:
                 // Search author by name
-                //librarian.searchByAuthor();
+                searchByAuthor();
                 break;
             case 4:
                 // Borrow book(s)
@@ -73,12 +77,16 @@ public class TheLibrary {
                 break;
             case 5:
                 // Return book(s)
+                returnBook();
                 break;
             default:
                 System.out.println("Invalid choice, try again.");
                 break;
         }
 
+    }
+
+    private void returnBook() {
     }
 
     private void issueBook() {
@@ -92,14 +100,37 @@ public class TheLibrary {
         Member member = database.getMemberById(memberId);
 
         if (book != null && member != null) {
-            boolean issued = librarian.issueBook(book, member, database);
-            if (issued) {
-                System.out.println("Book issued successfully.");
+            System.out.println(String.format("Dear %s, is this the book you want to borrow? :", member.getFirstName()) + " ' " + book + " '");
+            System.out.println("(Enter 'Y' to confirm, any other key to cancel)");
+            String confirmation = scanner.next();
+
+            if (confirmation.equalsIgnoreCase("Y")) {
+                boolean issued = librarian.issueBook(book, member, database);
+                if (issued) {
+                    System.out.println("Book issued successfully.");
+                } else {
+                    System.out.println("Failed to issue book.");
+                }
             } else {
-                System.out.println("Failed to issue book.");
+                System.out.println("Book issuance canceled.");
             }
         } else {
             System.out.println("Book or member not found.");
         }
     }
+    private void searchByTitle(){
+        System.out.println("Enter the title of the book you want to search:");
+        Scanner scanner = new Scanner(System.in);
+        String title = scanner.nextLine();
+
+        librarian.searchByTitle(title, database);
+    }
+    private void searchByAuthor(){
+        System.out.println("Enter the name of the author you want to search:");
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+
+        librarian.searchByAuthor(name, database);
+    }
+
 }

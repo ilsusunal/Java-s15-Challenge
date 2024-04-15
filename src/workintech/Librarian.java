@@ -1,5 +1,6 @@
 package workintech;
 
+import workintech.enums.Status;
 import workintech.enums.TransactionType;
 import workintech.interfaces.Managable;
 import workintech.interfaces.Searchable;
@@ -27,6 +28,7 @@ public class Librarian implements Searchable, Managable {
         boolean transactionCreated = transaction.createTransaction(member.getId(), book.getId(), dueDate, dateOfIssue, database);
         if (transactionCreated) {
             transactionSet.add(transaction);
+            book.setStatus(Status.BORROWED);
             System.out.println("Success! Transaction created.");
             return true;
         } else {
@@ -44,17 +46,46 @@ public class Librarian implements Searchable, Managable {
     }
 
     @Override
-    public void searchByAuthor() {
-        
+    public void searchByAuthor(String name, LibraryDatabase database) {
+        Map<Integer, Book> books = database.getBooks();
+        boolean found = false;
+
+        System.out.println(String.format("Books by %s: ", name));
+        for (Book book : books.values()) {
+            Author author = book.getAuthor();
+            if (author != null && author.getName().equalsIgnoreCase(name)) {
+                System.out.println("+ " + book);
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No books found with author: " + name);
+        }
     }
     @Override
-    public void searchByTitle(Map<Integer, Book> books) {
-
+    public void searchByTitle(String title, LibraryDatabase database) {
+        Map<Integer, Book> books = database.getBooks();
+        boolean found = false;
+        System.out.println("Search Results for Title: " + "'" + title+ "'");
+        for (Book book : books.values()) {
+            if (book.getTitle().equalsIgnoreCase(title)) {
+                System.out.println(book);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No books found with title: " + title);
+        }
     }
     @Override
     public void addBook(Book book, LibraryDatabase database) {
         int id = book.getId();
         database.getBooks().put(id, book);
+        Author author = book.getAuthor();
+        if (author != null) {
+            author.getBooks().add(book);
+        }
     }
     @Override
     public void deleteBookById(int id) {
