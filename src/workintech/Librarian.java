@@ -7,6 +7,7 @@ import workintech.interfaces.Searchable;
 import workintech.users.Member;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -33,22 +34,61 @@ public class Librarian implements Searchable, Managable {
             book.setStatus(Status.BORROWED); //book status is updated
             book.changeOwner(member); //book owner updated
             member.getAccount().setBorrowedBooks(book); //book added to the account
-
+            double currentDebt = member.getAccount().getDebt();
+            double additionDebt = book.getPrice();
+            member.getAccount().setDebt(currentDebt +  additionDebt); //book debt added to the account
             System.out.println("Success! Transaction created. Details below:");
             System.out.println("-Book owner: " + member.getName());
             System.out.println("-Book price: " + book.getPrice());
             System.out.println("-Date of Issue: " + dateOfIssue);
             System.out.println("-Due Date: " + dueDate);
+            System.out.println("-Payment Amount: " + " book price " + book.getPrice() + " added to debt before, total:  " + member.getAccount().getDebt());
             System.out.println("CHECK" + member.getAccount().getBorrowedBooks());
             return true;
         } else {
             return false;
         }
     }
-    public void calculateFine(){
+    public void calculateFine(LibraryDatabase database) {
+        LocalDate today = LocalDate.now();
+        double finePerDay = 0.50; // Fine amount per day (book - fine*day)
 
+        for (Transaction transaction : transactionSet) {
+            if (transaction.getDueDate().isBefore(today)) {
+                long overdueDays = ChronoUnit.DAYS.between(transaction.getDueDate(), today);
+                double fineAmount = finePerDay * overdueDays;
+
+                // Calculating the fine of member
+                Member member = database.getMemberById(transaction.getMemberId());
+                if (member != null) {
+                    member.getAccount().setDebt(member.getAccount().getDebt() + fineAmount);
+                }
+            }
+        }
     }
-
+    public boolean returnBook(Book book, Member member, LibraryDatabase database) {
+        for (Transaction transaction : transactionSet) {
+            if (transaction.getBookId() == book.getId() && transaction.getMemberId() == member.getId()) {
+                // Found the transaction for the returned book and member
+                if (book.getStatus() == Status.BORROWED && member.getAccount().getBorrowedBooks().contains(book)) {
+                    book.setStatus(Status.AVAILABLE);
+                    member.getAccount().getBorrowedBooks().remove(book);
+                    // Calculate fines if book is returned late
+                    calculateFine(database);
+                    transactionSet.remove(transaction); // Remove the transaction from the set
+                    System.out.println("- Payment Amount: " + book.getPrice());
+                    double debtLeft = member.getAccount().getDebt() - book.getPrice();
+                    member.getAccount().setDebt(debtLeft);
+                    System.out.println("- Debt Left : " + debtLeft);
+                    System.out.println("CHECK" + member.getAccount().getBorrowedBooks());
+                    return true;
+                } else {
+                    return false; // Book not borrowed by the member
+                }
+            }
+        }
+        return false; // Transaction not found
+    }
 
     @Override
     public void searchByAuthor(String name, LibraryDatabase database) {

@@ -1,5 +1,6 @@
 package workintech;
 
+import workintech.enums.Status;
 import workintech.enums.TransactionType;
 import workintech.users.Member;
 
@@ -20,29 +21,38 @@ public class Transaction {
         this.dateOfIssue = dateOfIssue;
     }
 
-    public int getBookId() {
-        return bookId;
-    }
+    public int getBookId() {return bookId;}
+    public LocalDate getDueDate() {return dueDate;}
+    public LocalDate getDateOfIssue() {return dateOfIssue;}
+    public int getMemberId() {return memberId;}
 
     public boolean createTransaction(int memberId, int bookId, LocalDate dueDate, LocalDate dateOfIssue, LibraryDatabase database){
         if(!validateMember(memberId, database) || !validateBook(bookId, database)){
             System.out.println("Error! Member/book cannot be found.");
             return false;
         }
-        this.memberId = memberId;
-        this.bookId = bookId;
-        this.dueDate = dueDate;
-        this.dateOfIssue = dateOfIssue;
-        return true;
+        if(!validateBorrowLimit(memberId, database)){
+            System.out.println("Error! You can not borrow more than 5 books.");
+            return false;
+        }
+        Book book = database.getBookById(bookId);
+        if (book.getStatus() == Status.AVAILABLE) {
+            this.memberId = memberId;
+            this.bookId = bookId;
+            this.dueDate = dueDate;
+            this.dateOfIssue = dateOfIssue;
+            return true;
+        } else {
+            System.out.println("Error! Book is already borrowed.");
+            return false;
+        }
     }
     private boolean validateBook(int bookId, LibraryDatabase database) { return database.getBooks().containsKey(bookId);}
     private boolean validateMember(int memberId, LibraryDatabase database) { return database.getMembers().containsKey(memberId);}
-
-    public void deleteTransaction(){
-
+    private boolean validateBorrowLimit(int memberId, LibraryDatabase database) {
+        Member member = database.getMemberById(memberId);
+        return member != null && member.getAccount().getBorrowedBooks().size() < 5;
     }
-    public void retrieveTransaction(){
 
-    }
 
 }

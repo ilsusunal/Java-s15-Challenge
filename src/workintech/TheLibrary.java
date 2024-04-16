@@ -86,6 +86,10 @@ public class TheLibrary {
                     // Return book(s)
                     returnBook();
                     break;
+                case 6:
+                    //See your account info
+                    checkAccount();
+                    break;
                 default:
                     System.out.println("Invalid choice, try again.");
                     break;
@@ -97,8 +101,43 @@ public class TheLibrary {
         }
     }
 
+    private void checkAccount() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your member ID:");
+        int memberId = scanner.nextInt();
+        Member member = database.getMemberById(memberId);
+        System.out.println(member);
+    }
+
     //Users choices while returning a book
     private void returnBook() {
+        System.out.println("Enter the ID of the book you want to return:");
+        Scanner scanner = new Scanner(System.in);
+        int bookId = scanner.nextInt();
+        System.out.println("Enter your member ID:");
+        int memberId = scanner.nextInt();
+
+        Book book = database.getBookById(bookId);
+        Member member = database.getMemberById(memberId);
+
+        if (book != null && member != null) {
+            System.out.println(String.format("Dear %s, do you want to return this book? :", member.getFirstName()) + " ' " + book + " '");
+            System.out.println("(Enter 'Y' to confirm, any other key to cancel)");
+            String confirmation = scanner.next();
+
+            if (confirmation.equalsIgnoreCase("Y")) {
+                boolean returned = librarian.returnBook(book, member, database);
+                if (returned) {
+                    System.out.println("Book returned successfully.");
+                } else {
+                    System.out.println("Failed to return book.");
+                }
+            } else {
+                System.out.println("Book return canceled.");
+            }
+        } else {
+            System.out.println("Book or member not found.");
+        }
     }
 
     //Users choices while issuing book

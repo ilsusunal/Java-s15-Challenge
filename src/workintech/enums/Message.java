@@ -7,7 +7,8 @@ public enum Message {
             + " -> Search book by title : 2" + "\n"
             + " -> Search author by name : 3" + "\n"
             + " -> Borrow book(s) : 4"+ "\n"
-            + " -> Return book(s) : 5"),
+            + " -> Return book(s) : 5" + "\n"
+            + " -> See your account : 6"),
     GOODBYE("See you later!");
 
     private String message;

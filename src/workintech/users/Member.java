@@ -37,12 +37,11 @@ public abstract class Member {
     public String getName() {return firstName + " " + lastName; }
     @Override
     public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", account=" + account +
-                '}';
+        return
+                "Hello " + firstName + " " + lastName + '\'' +
+                "Your account details : " + '\''
+                        + account;
+
     }
 
     @Override
