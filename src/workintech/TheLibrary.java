@@ -21,6 +21,7 @@ public class TheLibrary {
         initializeMembers();
     }
 
+    //Members created
     private void initializeMembers() {
         Member member1 = new Student(101, "İlsu", "Sunal", new Account(), Faculty.ARCHITECTURE, 1, Degree.MASTER);
         Member member2 = new Student(102, "Selin", "Öztürk", new Account(), Faculty.LAW, 4, Degree.BACHELOR);
@@ -32,6 +33,7 @@ public class TheLibrary {
         librarian.addMember(member4, database);
     }
 
+    //Books created
     public void initializeBooks() {
         Book book1 = new Book(1, new Author(10, "Terry", "Pratchett", "İngiliz fantastik komedi yazarı."), "Fantastik Işık", 100, Status.AVAILABLE);
         Book book2 = new Book(2, new Author(10, "Terry", "Pratchett", "İngiliz fantastik komedi yazarı."), "Hasbüyü", 150, Status.AVAILABLE);
@@ -54,41 +56,52 @@ public class TheLibrary {
         librarian.addBook(book9, database);
         librarian.addBook(book10, database);
     }
-    public void whatToDo(){
-        System.out.println(Message.TRANSACTION.getMessage());
-        Scanner scanner = new Scanner(System.in);
-        int userChoice = scanner.nextInt();
-        switch (userChoice) {
-            case 1:
-                // See books
-                database.display();
-                break;
-            case 2:
-                // Search book by title
-                searchByTitle();
-                break;
-            case 3:
-                // Search author by name
-                searchByAuthor();
-                break;
-            case 4:
-                // Borrow book(s)
-                issueBook();
-                break;
-            case 5:
-                // Return book(s)
-                returnBook();
-                break;
-            default:
-                System.out.println("Invalid choice, try again.");
-                break;
-        }
 
+    //Users choices
+    public void whatToDo(){
+        Scanner scanner = new Scanner(System.in);
+        boolean continueLoop = true;
+
+        while (continueLoop) {
+            System.out.println(Message.TRANSACTION.getMessage());
+            int userChoice = scanner.nextInt();
+            switch (userChoice) {
+                case 1:
+                    // See books
+                    database.display();
+                    break;
+                case 2:
+                    // Search book by title
+                    searchByTitle();
+                    break;
+                case 3:
+                    // Search author by name
+                    searchByAuthor();
+                    break;
+                case 4:
+                    // Borrow book(s)
+                    issueBook();
+                    break;
+                case 5:
+                    // Return book(s)
+                    returnBook();
+                    break;
+                default:
+                    System.out.println("Invalid choice, try again.");
+                    break;
+            }
+
+            System.out.println("Do you want to do anything else? (Y/N)");
+            String continueChoice = scanner.next();
+            continueLoop = continueChoice.equalsIgnoreCase("Y");
+        }
     }
 
+    //Users choices while returning a book
     private void returnBook() {
     }
 
+    //Users choices while issuing book
     private void issueBook() {
         System.out.println("Enter the ID of the book you want to borrow:");
         Scanner scanner = new Scanner(System.in);
@@ -118,6 +131,8 @@ public class TheLibrary {
             System.out.println("Book or member not found.");
         }
     }
+
+    //Users choices while searching a book by name
     private void searchByTitle(){
         System.out.println("Enter the title of the book you want to search:");
         Scanner scanner = new Scanner(System.in);
@@ -125,6 +140,8 @@ public class TheLibrary {
 
         librarian.searchByTitle(title, database);
     }
+
+    //Users choices while searching an author by name
     private void searchByAuthor(){
         System.out.println("Enter the name of the author you want to search:");
         Scanner scanner = new Scanner(System.in);

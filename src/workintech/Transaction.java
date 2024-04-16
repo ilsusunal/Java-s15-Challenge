@@ -20,6 +20,10 @@ public class Transaction {
         this.dateOfIssue = dateOfIssue;
     }
 
+    public int getBookId() {
+        return bookId;
+    }
+
     public boolean createTransaction(int memberId, int bookId, LocalDate dueDate, LocalDate dateOfIssue, LibraryDatabase database){
         if(!validateMember(memberId, database) || !validateBook(bookId, database)){
             System.out.println("Error! Member/book cannot be found.");

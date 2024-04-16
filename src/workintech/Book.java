@@ -1,6 +1,7 @@
 package workintech;
 
 import workintech.enums.Status;
+import workintech.users.Account;
 import workintech.users.Member;
 
 import java.util.Objects;
@@ -11,6 +12,7 @@ public class Book {
     private String title;
     private double price;
     private Status status;
+    private Member owner;
 
     //constructor
     public Book(int id, Author author, String title, double price, Status status) {
@@ -39,14 +41,16 @@ public class Book {
 
     //methods
     public void showOwner(){
-
+        if (owner != null) {
+            System.out.println("Owner: " + owner.getName());
+        } else {
+            System.out.println("Owner: Not borrowed yet");
+        }
     }
-    public void changeOwner(){
-
+    public void changeOwner(Member member){
+        this.owner = member;
     }
-    public void showDueDate(){
 
-    }
 
     @Override
     public String toString() {

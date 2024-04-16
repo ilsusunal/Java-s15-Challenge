@@ -21,15 +21,25 @@ public class Librarian implements Searchable, Managable {
         this.name = name;
         transactionSet = new HashSet<>();
     }
+
+    //Creating a transaction
     public boolean issueBook(Book book, Member member, LibraryDatabase database){
         Transaction transaction = new Transaction();
         LocalDate dateOfIssue = LocalDate.now();
         LocalDate dueDate = dateOfIssue.plusWeeks(2);
         boolean transactionCreated = transaction.createTransaction(member.getId(), book.getId(), dueDate, dateOfIssue, database);
         if (transactionCreated) {
-            transactionSet.add(transaction);
-            book.setStatus(Status.BORROWED);
-            System.out.println("Success! Transaction created.");
+            transactionSet.add(transaction); //transaction added to the set
+            book.setStatus(Status.BORROWED); //book status is updated
+            book.changeOwner(member); //book owner updated
+            member.getAccount().setBorrowedBooks(book); //book added to the account
+
+            System.out.println("Success! Transaction created. Details below:");
+            System.out.println("-Book owner: " + member.getName());
+            System.out.println("-Book price: " + book.getPrice());
+            System.out.println("-Date of Issue: " + dateOfIssue);
+            System.out.println("-Due Date: " + dueDate);
+            System.out.println("CHECK" + member.getAccount().getBorrowedBooks());
             return true;
         } else {
             return false;
@@ -38,12 +48,7 @@ public class Librarian implements Searchable, Managable {
     public void calculateFine(){
 
     }
-    public void createBill(){
 
-    }
-    public void verifyMember(){
-
-    }
 
     @Override
     public void searchByAuthor(String name, LibraryDatabase database) {
@@ -70,7 +75,7 @@ public class Librarian implements Searchable, Managable {
         System.out.println("Search Results for Title: " + "'" + title+ "'");
         for (Book book : books.values()) {
             if (book.getTitle().equalsIgnoreCase(title)) {
-                System.out.println(book);
+                System.out.println(book + " Situation " + book.getStatus());
                 found = true;
             }
         }

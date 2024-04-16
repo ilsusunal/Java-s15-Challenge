@@ -34,7 +34,7 @@ public abstract class Member {
     public Account getAccount() {
         return account;
     }
-
+    public String getName() {return firstName + " " + lastName; }
     @Override
     public String toString() {
         return "Member{" +
@@ -57,4 +57,6 @@ public abstract class Member {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }
