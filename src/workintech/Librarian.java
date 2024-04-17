@@ -126,23 +126,84 @@ public class Librarian implements Searchable, Managable {
     @Override
     public void addBook(Book book, LibraryDatabase database) {
         int id = book.getId();
+        String authorName = book.getAuthor().getName();
         database.getBooks().put(id, book);
+        database.getAuthors().put(authorName, book.getAuthor());
         Author author = book.getAuthor();
         if (author != null) {
             author.getBooks().add(book);
         }
     }
     @Override
-    public void deleteBookById(int id) {
-
+    public void deleteBookById(int id, LibraryDatabase database) {
+        Book bookToRemove = null;
+        for (Book book : database.getBooks().values()) {
+            if (book.getId() == id) {
+                bookToRemove = book;
+                break;
+            }
+        }
+        if (bookToRemove != null) {
+            database.getBooks().remove(bookToRemove.getId());
+            Author author = bookToRemove.getAuthor();
+            if (author != null) {
+                author.getBooks().remove(bookToRemove);
+            }
+            System.out.println("Book with ID " + id + " has been deleted.");
+        } else {
+            System.out.println("Book with ID " + id + " not found.");
+        }
     }
     @Override
-    public void deleteBookByTitle(String title) {
-
+    public void deleteBookByTitle(String title, LibraryDatabase database) {
+        Book bookToRemove = null;
+        for (Book book : database.getBooks().values()) {
+            if (book.getTitle().equalsIgnoreCase(title)) {
+                bookToRemove = book;
+                break;
+            }
+        }
+        if (bookToRemove != null) {
+            database.getBooks().remove(bookToRemove.getId());
+            Author author = bookToRemove.getAuthor();
+            if (author != null) {
+                author.getBooks().remove(bookToRemove);
+            }
+            System.out.println("Book with title '" + title + "' has been deleted.");
+        } else {
+            System.out.println("Book with title '" + title + "' not found.");
+        }
     }
+
+    @Override
+    public void updateBook(Book book, LibraryDatabase database) {
+        int bookId = book.getId();
+        if (database.getBooks().containsKey(bookId)) {
+            Book existingBook = database.getBooks().get(bookId);
+            existingBook.setTitle(book.getTitle());
+            existingBook.setAuthor(book.getAuthor());
+            existingBook.setPrice(book.getPrice());
+            existingBook.setStatus(book.getStatus());
+            System.out.println("Book with ID " + bookId + " has been updated.");
+        } else {
+            System.out.println("Book with ID " + bookId + " not found.");
+        }
+    }
+
     @Override
     public void addMember(Member member, LibraryDatabase database) {
         int id = member.getId();
         database.getMembers().put(id, member);
+    }
+
+    @Override
+    public void deleteMember(Member member, LibraryDatabase database) {
+        int memberId = member.getId();
+        if (database.getMembers().containsKey(memberId)) {
+            database.getMembers().remove(memberId);
+            System.out.println("Member with ID " + memberId + " has been deleted.");
+        } else {
+            System.out.println("Member with ID " + memberId + " not found.");
+        }
     }
 }

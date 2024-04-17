@@ -9,11 +9,11 @@ import java.util.Map;
 public class LibraryDatabase {
     private Map<Integer, Book> books = new HashMap<>();
     private Map<Integer, Member> members = new HashMap<>();;
-    private Map<Integer, Author> authors = new HashMap<>();;
+    private Map<String, Author> authors = new HashMap<>();;
 
     public Map<Integer, Book> getBooks() { return books; }
     public Map<Integer, Member> getMembers() { return members; }
-    public Map<Integer, Author> getAuthors() { return authors; }
+    public Map<String, Author> getAuthors() { return authors; }
 
     public Book getBookById(int bookId) { return books.get(bookId); }
     public Member getMemberById(int memberId) { return members.get(memberId);}
@@ -37,4 +37,5 @@ public class LibraryDatabase {
                 ", authors=" + authors +
                 '}';
     }
+
 }

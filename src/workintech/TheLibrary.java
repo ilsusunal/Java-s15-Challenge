@@ -12,10 +12,12 @@ import java.util.Scanner;
 public class TheLibrary {
     private Librarian librarian;
     private LibraryDatabase database;
+    private UserInterface userInterface;
 
     public TheLibrary() {
-        this.librarian = new Librarian(1, "The Librarian");
+        this.librarian = new Librarian(123, "The Librarian");
         this.database = new LibraryDatabase();
+        this.userInterface = new UserInterface();
         System.out.println(Message.WELCOME.getMessage());
         initializeBooks();
         initializeMembers();
@@ -23,14 +25,16 @@ public class TheLibrary {
 
     //Members created
     private void initializeMembers() {
-        Member member1 = new Student(101, "İlsu", "Sunal", new Account(), Faculty.ARCHITECTURE, 1, Degree.MASTER);
-        Member member2 = new Student(102, "Selin", "Öztürk", new Account(), Faculty.LAW, 4, Degree.BACHELOR);
-        Member member3 = new Student(103, "Mehmet", "Sunal", new Account(), Faculty.SCIENCE, 1, Degree.PHD);
-        Member member4 = new Instructor(201, "Doğancan", "Kınık", new Account(), Faculty.ENGINEERING, Role.PROFFESOR);
+        Member member1 = new Student(101, "İlsu", "Sunal", new Account(), Faculty.ARCHITECTURE, "aaa",1, Degree.MASTER);
+        Member member2 = new Student(102, "Selin", "Öztürk", new Account(), Faculty.LAW, "bbb",4, Degree.BACHELOR);
+        Member member3 = new Student(103, "Mehmet", "Yılmaz", new Account(), Faculty.SCIENCE,"ccc", 1, Degree.PHD);
+        Member member4 = new Instructor(201, "Doğancan", "Kınık", new Account(), Faculty.ENGINEERING, "ddd", Role.PROFFESOR);
+        Member member5 = new Instructor(202, "İpek", "Sunal", new Account(), Faculty.ART, "fff", Role.ASSISTANT);
         librarian.addMember(member1, database);
         librarian.addMember(member2, database);
         librarian.addMember(member3, database);
         librarian.addMember(member4, database);
+        librarian.addMember(member5, database);
     }
 
     //Books created
@@ -57,8 +61,31 @@ public class TheLibrary {
         librarian.addBook(book10, database);
     }
 
+    //User Interface starts
+    public void startLibrary(){
+        userInterface.whoAreYou();
+        int memberId = userInterface.getId();
+
+        if (memberId != 0) {
+            if (userInterface.isLibrarian()) {
+                System.out.println("Welcome, Librarian!");
+                whatToDoLibrarian();
+            } else {
+                Member member = database.getMemberById(memberId);
+                if (member != null) {
+                    System.out.println("Welcome, " + member.getFirstName() + "!");
+                    whatToDoMember(memberId);
+                } else {
+                    System.out.println("Member not found.");
+                }
+            }
+        } else {
+            System.out.println("Invalid user input.");
+        }
+    }
+
     //Users choices
-    public void whatToDo(){
+    public void whatToDoMember(int memberId){
         Scanner scanner = new Scanner(System.in);
         boolean continueLoop = true;
 
@@ -80,15 +107,15 @@ public class TheLibrary {
                     break;
                 case 4:
                     // Borrow book(s)
-                    issueBook();
+                    issueBook(memberId);
                     break;
                 case 5:
                     // Return book(s)
-                    returnBook();
+                    returnBook(memberId);
                     break;
                 case 6:
-                    //See your account info
-                    checkAccount();
+                    // See your account info
+                    seeAccountDetails(memberId);
                     break;
                 default:
                     System.out.println("Invalid choice, try again.");
@@ -101,21 +128,204 @@ public class TheLibrary {
         }
     }
 
-    private void checkAccount() {
+    //Librarian choices
+    public void whatToDoLibrarian(){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your member ID:");
+        boolean continueLoop = true;
+        while (continueLoop) {
+            System.out.println(Message.LIBRARIANACTIONS.getMessage());
+            int librarianChoice = scanner.nextInt();
+            switch (librarianChoice) {
+                case 1:
+                    //To add member
+                    addMember();
+                    System.out.println("New Member list: " + database.getMembers());
+                    break;
+                case 2:
+                    //To delete member
+                    deleteMember();
+                    System.out.println("New Member list: " + database.getMembers());
+                    break;
+                case 3:
+                    //To add book
+                    addBook();
+                    System.out.println("New Author list: " + database.getAuthors());
+                    System.out.println("New Book list: " + database.getBooks());
+                    break;
+                case 4:
+                    //To delete book
+                    deleteBook();
+                    System.out.println("New Author list: " + database.getAuthors());
+                    System.out.println("New Book list: " + database.getBooks());
+                    break;
+                case 5:
+                    //To update book
+                    updateBook();
+                    System.out.println("New Book list: " + database.getBooks());
+                    break;
+                case 6:
+                    System.out.println("New Author list: " + database.getAuthors());
+                    System.out.println("New Book list: " + database.getBooks());
+                    break;
+                default:
+                    System.out.println("Invalid choice, try again.");
+                    break;
+
+            }
+            System.out.println("Do you want to do anything else? (Y/N)");
+            String continueChoice = scanner.next();
+            continueLoop = continueChoice.equalsIgnoreCase("Y");
+        }
+    }
+
+    private void updateBook() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the ID of the book you want to update:");
+        int bookId = scanner.nextInt();
+        scanner.nextLine();
+
+        Book existingBook = database.getBookById(bookId);
+        if (existingBook != null) {
+            System.out.println("Enter the new details for the book:");
+            System.out.println("New Title:");
+            String newTitle = scanner.nextLine();
+            System.out.println("New Author ID:");
+            int authorId = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("New Author First Name:");
+            String authorFirstName = scanner.nextLine();
+            System.out.println("New Author Last Name:");
+            String authorLastName = scanner.nextLine();
+            System.out.println("New Author Description:");
+            String authorDescription = scanner.nextLine();
+            System.out.println("New Price:");
+            int newPrice = scanner.nextInt();
+            scanner.nextLine();
+
+
+            Author newAuthor = new Author(authorId, authorFirstName, authorLastName, authorDescription);
+            Book updatedBook = new Book(existingBook.getId(), newAuthor, newTitle, newPrice, existingBook.getStatus());
+            librarian.updateBook(updatedBook, database);
+            System.out.println("Book details updated successfully.");
+        } else {
+            System.out.println("Book not found.");
+        }
+    }
+
+    //Librarian choice while deleting a book by id
+    private void deleteBook() {
+        System.out.println("Enter the ID of the book you want to delete:");
+        Scanner scanner = new Scanner(System.in);
+        int bookId = scanner.nextInt();
+
+        Book book = database.getBookById(bookId);
+        if(book != null){
+            System.out.println("Are you sure about deleting " + book.getTitle() + "? (Y/N)");
+            String confirmation = scanner.next();
+            if(confirmation.equalsIgnoreCase("Y")){
+                librarian.deleteBookById(bookId, database);
+                //database.
+                System.out.println("Book deleted successfully.");
+            } else {
+                System.out.println("Deletion canceled.");
+            }
+        } else {
+            System.out.println("Book not found.");
+        }
+    }
+
+    //Librarian choice while adding a book by id
+    private void addBook() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the details of the book:");
+        System.out.println("Book ID:");
+        int bookId = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Author ID:");
+        int authorId = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Author First Name:");
+        String authorFirstName = scanner.nextLine();
+        System.out.println("Author Last Name:");
+        String authorLastName = scanner.nextLine();
+        System.out.println("Author Description:");
+        String authorDescription = scanner.nextLine();
+        System.out.println("Book Title:");
+        String title = scanner.nextLine();
+        System.out.println("Book Price:");
+        int price = scanner.nextInt();
+        scanner.nextLine();
+
+        Author author = new Author(authorId, authorFirstName, authorLastName, authorDescription);
+        Book book = new Book(bookId, author, title, price, Status.AVAILABLE);
+        librarian.addBook(book, database);
+        System.out.println("Book added successfully.");
+    }
+
+    //Librarian choice while deleting a member by id
+    private void deleteMember() {
+        System.out.println("Enter the ID of the member you want to delete:");
+        Scanner scanner = new Scanner(System.in);
         int memberId = scanner.nextInt();
+
+        Member member = database.getMemberById(memberId);
+        if(member != null){
+            System.out.println("Are you sure about deleting " + member.getName() + "? (Y/N)");
+            String confirmation = scanner.next();
+            if(confirmation.equalsIgnoreCase("Y")){
+                librarian.deleteMember(member, database);
+                System.out.println("Member deleted successfully.");
+            } else {
+                System.out.println("Deletion canceled.");
+            }
+        } else {
+            System.out.println("Member not found.");
+        }
+    }
+
+    //Librarian choice while adding a member by id
+    private void addMember() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the details of the member:");
+        System.out.println("Member ID:");
+        int memberId = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("First Name:");
+        String firstName = scanner.nextLine();
+        System.out.println("Last Name:");
+        String lastName = scanner.nextLine();
+        System.out.println("Faculty (ARCHITECTURE/LAW/SCIENCE/ENGINEERING/ART):");
+        String facultyStr = scanner.nextLine();
+        Faculty faculty = Faculty.valueOf(facultyStr.toUpperCase());
+        System.out.println("Password:");
+        String password = scanner.nextLine();
+        System.out.println("Degree (for students) or Role (for instructors):");
+        String degreeOrRole = scanner.nextLine();
+
+        Member member;
+        if (degreeOrRole.equalsIgnoreCase("BACHELOR") || degreeOrRole.equalsIgnoreCase("MASTER") || degreeOrRole.equalsIgnoreCase("PHD")) {
+            Degree degree = Degree.valueOf(degreeOrRole.toUpperCase());
+            member = new Student(memberId, firstName, lastName, new Account(), faculty, password, 1, degree);
+        } else {
+            Role role = Role.valueOf(degreeOrRole.toUpperCase());
+            member = new Instructor(memberId, firstName, lastName, new Account(), faculty, password, role);
+        }
+
+        librarian.addMember(member, database);
+        System.out.println("Member added successfully.");
+    }
+
+    //Check if user exist by id
+    private void seeAccountDetails(int memberId) {
         Member member = database.getMemberById(memberId);
         System.out.println(member);
     }
 
     //Users choices while returning a book
-    private void returnBook() {
+    private void returnBook(int memberId) {
         System.out.println("Enter the ID of the book you want to return:");
         Scanner scanner = new Scanner(System.in);
         int bookId = scanner.nextInt();
-        System.out.println("Enter your member ID:");
-        int memberId = scanner.nextInt();
 
         Book book = database.getBookById(bookId);
         Member member = database.getMemberById(memberId);
@@ -141,12 +351,10 @@ public class TheLibrary {
     }
 
     //Users choices while issuing book
-    private void issueBook() {
+    private void issueBook(int memberId) {
         System.out.println("Enter the ID of the book you want to borrow:");
         Scanner scanner = new Scanner(System.in);
         int bookId = scanner.nextInt();
-        System.out.println("Enter your member ID:");
-        int memberId = scanner.nextInt();
 
         Book book = database.getBookById(bookId);
         Member member = database.getMemberById(memberId);

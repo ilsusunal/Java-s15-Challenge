@@ -10,13 +10,15 @@ public abstract class Member {
     private String lastName;
     private Account account;
     private Faculty faculty;
+    private String password;
 
-    public Member(int id, String firstName, String lastName, Account account, Faculty faculty) {
+    public Member(int id, String firstName, String lastName, Account account, Faculty faculty, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.account = account;
         this.faculty = faculty;
+        this.password = password;
     }
 
     public int getId() {
@@ -35,6 +37,9 @@ public abstract class Member {
         return account;
     }
     public String getName() {return firstName + " " + lastName; }
+
+    public String getPassword() {return password;}
+
     @Override
     public String toString() {
         return

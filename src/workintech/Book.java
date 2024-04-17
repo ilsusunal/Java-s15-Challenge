@@ -38,6 +38,9 @@ public class Book {
     public void setStatus(Status status) {
         this.status = status;
     }
+    public void setAuthor(Author author) {this.author = author;}
+    public void setTitle(String title) {this.title = title;}
+    public void setPrice(double price) {this.price = price;}
 
     //methods
     public void showOwner(){

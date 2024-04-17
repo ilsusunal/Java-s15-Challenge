@@ -9,7 +9,12 @@ public enum Message {
             + " -> Borrow book(s) : 4"+ "\n"
             + " -> Return book(s) : 5" + "\n"
             + " -> See your account : 6"),
-    GOODBYE("See you later!");
+    GOODBYE("See you later!"),
+    LIBRARIANACTIONS("Actions:"+ "\n"
+            + " -> To add member : 1"+ "\n"
+            + " -> To delete member : 2"+ "\n"
+            + " -> To add book : 3"+ "\n"
+            + " -> To delete book : 4");
 
     private String message;
     Message(String message) {
