@@ -1,7 +1,6 @@
 package workintech.users;
 
-import workintech.Book;
-import workintech.Transaction;
+import workintech.datas.Book;
 
 import java.util.LinkedList;
 import java.util.List;

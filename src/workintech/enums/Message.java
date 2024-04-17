@@ -14,7 +14,8 @@ public enum Message {
             + " -> To add member : 1"+ "\n"
             + " -> To delete member : 2"+ "\n"
             + " -> To add book : 3"+ "\n"
-            + " -> To delete book : 4");
+            + " -> To delete book : 4" + "\n"
+            + " -> To update book : 5");
 
     private String message;
     Message(String message) {

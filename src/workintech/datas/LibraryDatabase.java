@@ -1,6 +1,5 @@
-package workintech;
+package workintech.datas;
 
-import workintech.interfaces.Searchable;
 import workintech.users.Member;
 
 import java.util.HashMap;

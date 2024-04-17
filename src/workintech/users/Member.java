@@ -24,20 +24,16 @@ public abstract class Member {
     public int getId() {
         return id;
     }
-
     public String getFirstName() {
         return firstName;
     }
-
     public String getLastName() {
         return lastName;
     }
-
     public Account getAccount() {
         return account;
     }
     public String getName() {return firstName + " " + lastName; }
-
     public String getPassword() {return password;}
 
     @Override

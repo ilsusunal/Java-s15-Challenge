@@ -1,9 +1,6 @@
 package workintech.interfaces;
 
-import workintech.Book;
-import workintech.LibraryDatabase;
-
-import java.util.Map;
+import workintech.datas.LibraryDatabase;
 
 public interface Searchable {
     void searchByAuthor(String name, LibraryDatabase database);

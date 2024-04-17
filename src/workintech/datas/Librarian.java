@@ -1,7 +1,6 @@
-package workintech;
+package workintech.datas;
 
 import workintech.enums.Status;
-import workintech.enums.TransactionType;
 import workintech.interfaces.Managable;
 import workintech.interfaces.Searchable;
 import workintech.users.Member;
@@ -13,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class Librarian implements Searchable, Managable {
-    private int id;
+    private int id = 123;
     private String name;
     private Set<Transaction> transactionSet; //I used Set to be sure not to issue same book twice.
 
@@ -90,6 +89,8 @@ public class Librarian implements Searchable, Managable {
         return false; // Transaction not found
     }
 
+
+    //Searchable override
     @Override
     public void searchByAuthor(String name, LibraryDatabase database) {
         Map<Integer, Book> books = database.getBooks();
@@ -123,6 +124,9 @@ public class Librarian implements Searchable, Managable {
             System.out.println("No books found with title: " + title);
         }
     }
+
+
+    //Managable override
     @Override
     public void addBook(Book book, LibraryDatabase database) {
         int id = book.getId();
@@ -152,26 +156,6 @@ public class Librarian implements Searchable, Managable {
             System.out.println("Book with ID " + id + " has been deleted.");
         } else {
             System.out.println("Book with ID " + id + " not found.");
-        }
-    }
-    @Override
-    public void deleteBookByTitle(String title, LibraryDatabase database) {
-        Book bookToRemove = null;
-        for (Book book : database.getBooks().values()) {
-            if (book.getTitle().equalsIgnoreCase(title)) {
-                bookToRemove = book;
-                break;
-            }
-        }
-        if (bookToRemove != null) {
-            database.getBooks().remove(bookToRemove.getId());
-            Author author = bookToRemove.getAuthor();
-            if (author != null) {
-                author.getBooks().remove(bookToRemove);
-            }
-            System.out.println("Book with title '" + title + "' has been deleted.");
-        } else {
-            System.out.println("Book with title '" + title + "' not found.");
         }
     }
 

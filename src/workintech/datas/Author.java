@@ -1,4 +1,4 @@
-package workintech;
+package workintech.datas;
 
 import java.util.HashSet;
 import java.util.Objects;

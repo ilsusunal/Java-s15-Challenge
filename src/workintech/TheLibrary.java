@@ -1,5 +1,9 @@
 package workintech;
 
+import workintech.datas.Author;
+import workintech.datas.Book;
+import workintech.datas.Librarian;
+import workintech.datas.LibraryDatabase;
 import workintech.enums.*;
 import workintech.users.Account;
 import workintech.users.Instructor;
@@ -19,12 +23,11 @@ public class TheLibrary {
         this.database = new LibraryDatabase();
         this.userInterface = new UserInterface();
         System.out.println(Message.WELCOME.getMessage());
-        initializeBooks();
-        initializeMembers();
+        initialize();
     }
 
-    //Members created
-    private void initializeMembers() {
+    //Members and books created
+    private void initialize() {
         Member member1 = new Student(101, "İlsu", "Sunal", new Account(), Faculty.ARCHITECTURE, "aaa",1, Degree.MASTER);
         Member member2 = new Student(102, "Selin", "Öztürk", new Account(), Faculty.LAW, "bbb",4, Degree.BACHELOR);
         Member member3 = new Student(103, "Mehmet", "Yılmaz", new Account(), Faculty.SCIENCE,"ccc", 1, Degree.PHD);
@@ -35,10 +38,6 @@ public class TheLibrary {
         librarian.addMember(member3, database);
         librarian.addMember(member4, database);
         librarian.addMember(member5, database);
-    }
-
-    //Books created
-    public void initializeBooks() {
         Book book1 = new Book(1, new Author(10, "Terry", "Pratchett", "İngiliz fantastik komedi yazarı."), "Fantastik Işık", 100, Status.AVAILABLE);
         Book book2 = new Book(2, new Author(10, "Terry", "Pratchett", "İngiliz fantastik komedi yazarı."), "Hasbüyü", 150, Status.AVAILABLE);
         Book book3 = new Book(3, new Author(20, "Isaac", "Asimov", "Amerikalı bilim kurgu yazarı."), "Vakıf", 200, Status.AVAILABLE);
@@ -73,7 +72,7 @@ public class TheLibrary {
             } else {
                 Member member = database.getMemberById(memberId);
                 if (member != null) {
-                    System.out.println("Welcome, " + member.getFirstName() + "!");
+                    System.out.println("Welcome, " + member.getFirstName() + " !");
                     whatToDoMember(memberId);
                 } else {
                     System.out.println("Member not found.");
@@ -84,51 +83,8 @@ public class TheLibrary {
         }
     }
 
-    //Users choices
-    public void whatToDoMember(int memberId){
-        Scanner scanner = new Scanner(System.in);
-        boolean continueLoop = true;
 
-        while (continueLoop) {
-            System.out.println(Message.TRANSACTION.getMessage());
-            int userChoice = scanner.nextInt();
-            switch (userChoice) {
-                case 1:
-                    // See books
-                    database.display();
-                    break;
-                case 2:
-                    // Search book by title
-                    searchByTitle();
-                    break;
-                case 3:
-                    // Search author by name
-                    searchByAuthor();
-                    break;
-                case 4:
-                    // Borrow book(s)
-                    issueBook(memberId);
-                    break;
-                case 5:
-                    // Return book(s)
-                    returnBook(memberId);
-                    break;
-                case 6:
-                    // See your account info
-                    seeAccountDetails(memberId);
-                    break;
-                default:
-                    System.out.println("Invalid choice, try again.");
-                    break;
-            }
-
-            System.out.println("Do you want to do anything else? (Y/N)");
-            String continueChoice = scanner.next();
-            continueLoop = continueChoice.equalsIgnoreCase("Y");
-        }
-    }
-
-    //Librarian choices
+    //Librarian's choices
     public void whatToDoLibrarian(){
         Scanner scanner = new Scanner(System.in);
         boolean continueLoop = true;
@@ -212,7 +168,6 @@ public class TheLibrary {
         }
     }
 
-    //Librarian choice while deleting a book by id
     private void deleteBook() {
         System.out.println("Enter the ID of the book you want to delete:");
         Scanner scanner = new Scanner(System.in);
@@ -234,7 +189,6 @@ public class TheLibrary {
         }
     }
 
-    //Librarian choice while adding a book by id
     private void addBook() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the details of the book:");
@@ -262,7 +216,6 @@ public class TheLibrary {
         System.out.println("Book added successfully.");
     }
 
-    //Librarian choice while deleting a member by id
     private void deleteMember() {
         System.out.println("Enter the ID of the member you want to delete:");
         Scanner scanner = new Scanner(System.in);
@@ -283,7 +236,6 @@ public class TheLibrary {
         }
     }
 
-    //Librarian choice while adding a member by id
     private void addMember() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the details of the member:");
@@ -315,13 +267,57 @@ public class TheLibrary {
         System.out.println("Member added successfully.");
     }
 
-    //Check if user exist by id
+
+
+    //Users choices
+    public void whatToDoMember(int memberId){
+        Scanner scanner = new Scanner(System.in);
+        boolean continueLoop = true;
+
+        while (continueLoop) {
+            System.out.println(Message.TRANSACTION.getMessage());
+            int userChoice = scanner.nextInt();
+            switch (userChoice) {
+                case 1:
+                    // See books
+                    database.display();
+                    break;
+                case 2:
+                    // Search book by title
+                    searchByTitle();
+                    break;
+                case 3:
+                    // Search author by name
+                    searchByAuthor();
+                    break;
+                case 4:
+                    // Borrow book(s)
+                    issueBook(memberId);
+                    break;
+                case 5:
+                    // Return book(s)
+                    returnBook(memberId);
+                    break;
+                case 6:
+                    // See your account info
+                    seeAccountDetails(memberId);
+                    break;
+                default:
+                    System.out.println("Invalid choice, try again.");
+                    break;
+            }
+
+            System.out.println("Do you want to do anything else? (Y/N)");
+            String continueChoice = scanner.next();
+            continueLoop = continueChoice.equalsIgnoreCase("Y");
+        }
+    }
+
     private void seeAccountDetails(int memberId) {
         Member member = database.getMemberById(memberId);
         System.out.println(member);
     }
 
-    //Users choices while returning a book
     private void returnBook(int memberId) {
         System.out.println("Enter the ID of the book you want to return:");
         Scanner scanner = new Scanner(System.in);
@@ -350,7 +346,6 @@ public class TheLibrary {
         }
     }
 
-    //Users choices while issuing book
     private void issueBook(int memberId) {
         System.out.println("Enter the ID of the book you want to borrow:");
         Scanner scanner = new Scanner(System.in);
@@ -379,7 +374,6 @@ public class TheLibrary {
         }
     }
 
-    //Users choices while searching a book by name
     private void searchByTitle(){
         System.out.println("Enter the title of the book you want to search:");
         Scanner scanner = new Scanner(System.in);
@@ -388,7 +382,6 @@ public class TheLibrary {
         librarian.searchByTitle(title, database);
     }
 
-    //Users choices while searching an author by name
     private void searchByAuthor(){
         System.out.println("Enter the name of the author you want to search:");
         Scanner scanner = new Scanner(System.in);

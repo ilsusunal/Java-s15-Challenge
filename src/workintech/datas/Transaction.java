@@ -1,7 +1,8 @@
-package workintech;
+package workintech.datas;
 
+import workintech.datas.Book;
+import workintech.datas.LibraryDatabase;
 import workintech.enums.Status;
-import workintech.enums.TransactionType;
 import workintech.users.Member;
 
 import java.time.LocalDate;
@@ -12,14 +13,6 @@ public class Transaction {
     private LocalDate dueDate;
     private LocalDate dateOfIssue;
 
-    public Transaction() {
-    }
-    public Transaction(int memberId, int bookId, LocalDate dueDate, LocalDate dateOfIssue) {
-        this.memberId = memberId;
-        this.bookId = bookId;
-        this.dueDate = dueDate;
-        this.dateOfIssue = dateOfIssue;
-    }
 
     public int getBookId() {return bookId;}
     public LocalDate getDueDate() {return dueDate;}
@@ -31,7 +24,7 @@ public class Transaction {
             System.out.println("Error! Member/book cannot be found.");
             return false;
         }
-        if(!validateBorrowLimit(memberId, database)){
+        if(!validateLimit(memberId, database)){
             System.out.println("Error! You can not borrow more than 5 books.");
             return false;
         }
@@ -49,7 +42,7 @@ public class Transaction {
     }
     private boolean validateBook(int bookId, LibraryDatabase database) { return database.getBooks().containsKey(bookId);}
     private boolean validateMember(int memberId, LibraryDatabase database) { return database.getMembers().containsKey(memberId);}
-    private boolean validateBorrowLimit(int memberId, LibraryDatabase database) {
+    private boolean validateLimit(int memberId, LibraryDatabase database) {
         Member member = database.getMemberById(memberId);
         return member != null && member.getAccount().getBorrowedBooks().size() < 5;
     }

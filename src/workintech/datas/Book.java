@@ -1,7 +1,6 @@
-package workintech;
+package workintech.datas;
 
 import workintech.enums.Status;
-import workintech.users.Account;
 import workintech.users.Member;
 
 import java.util.Objects;
